@@ -2,21 +2,72 @@ import java.util.*;
 
 public class Main {
 
-
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
-        Graph<Character> graph = new Graph<>();
-        graph.addEdge('w', 'x');
-        graph.addEdge('x', 'y');
-        graph.addEdge('z', 'y');
-        graph.addEdge('z', 'v');
-        graph.addEdge('w', 'v');
 
-        
 
     }
 
+//    public static int gridTraveler(int rowNum, int colNum){
+//
+//    }
+
+   //iterative way
+    public static long fib(int n) {
+        if (n <= 2) return 1;
+        long[] arr = new long[n];
+        arr[0] = 1;
+        arr[1] = 1;
+        for (int i = 2; i < n; i++) {
+            arr[i] = arr[i - 1] + arr[i - 2];
+        }
+        return arr[n - 1];
+    }
+    //memoization
+    public static long fib(long n, Map<Long, Long> memo){
+        if(memo.containsKey(n)) return memo.get(n);
+        if (n <= 2) return 1;
+        memo.put(n, (fib(n - 1, memo) + fib(n - 2, memo)));
+        return memo.get(n);
+    }
+
+
+}
+
+class Grid {
+    char[][] grid;
+
+    public Grid(int rowNum, int colNum) {
+        this.grid = new char[rowNum][colNum];
+    }
+
+    public int minimumIsland(char[][] grid, int startRow, int startCol) {
+
+        if (startRow < 0 || startRow >= this.grid.length || startCol < 0 || startCol >= this.grid[0].length) return 0;
+        if (this.grid[startRow][startCol] == 'W' || this.grid[startRow][startCol] == 'V') return 0;
+        this.grid[startRow][startCol] = 'V';
+        int size = 1;
+        size += minimumIsland(this.grid, startRow, startCol - 1);
+        size += minimumIsland(this.grid, startRow - 1, startCol);
+        size += minimumIsland(this.grid, startRow, startCol + 1);
+        size += minimumIsland(this.grid, startRow + 1, startCol);
+        return size;
+
+    }
+
+    public boolean countIsland(char[][] grid, int startRow, int startCol) {
+        if (startRow < 0 || startRow >= this.grid.length || startCol < 0 || startCol >= this.grid[0].length)
+            return false;
+        if (this.grid[startRow][startCol] == 'W' || this.grid[startRow][startCol] == 'V') return false;
+        this.grid[startRow][startCol] = 'V';
+        countIsland(this.grid, startRow, startCol - 1);
+        countIsland(this.grid, startRow - 1, startCol);
+        countIsland(this.grid, startRow, startCol + 1);
+        countIsland(this.grid, startRow + 1, startCol);
+        return true;
+
+    }
 }
 
 class Graph<T> {
@@ -116,11 +167,11 @@ class Node<T> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if(o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) return false;
 
         Node<?> node = (Node<?>) o;
 
-        if(distance != node.distance) return false;
+        if (distance != node.distance) return false;
         return Objects.equals(vertex, node.vertex);
     }
 
